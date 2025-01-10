@@ -18,29 +18,16 @@ jobs:
         run: |
           git fetch origin main # Ensure main branch is fetched
 
-      - name: Validate Most Recent Commit
+      - name: Validate most recent commit message
         run: |
-          # Define the regex pattern for valid commit messages
-          regex="^ASSETMGMTA-[0-9]+ : .+"
-
-          # Get the most recent commit message and type
-          recent_commit_message=$(git log -1 --pretty=format:"%s")
-          recent_commit_type=$(git log -1 --pretty=format:"%h: %s")
+          # Get the most recent non-merge commit
+          COMMIT_MSG=$(git log --no-merges -1 --format=%s)
           
-          # Check if the most recent commit is a merge commit
-          if [[ $recent_commit_message == Merge* ]]; then
-            echo "✅ Skipping merge commit:"
-            echo "$recent_commit_type"
-            exit 0
-          fi
-
-          # Validate the recent commit message
-          if [[ ! $recent_commit_message =~ $regex && ! $recent_commit_message =~ ^.*Revert.* ]]; then
-            echo "❌ The most recent commit has an invalid message:"
-            echo "$recent_commit_message"
-            echo "Commit messages must match the format: ASSETMGMTA-***** : Commit_Message or be a Revert commit."
+          # Check if commit message matches required format
+          if ! echo "$COMMIT_MSG" | grep -qE '^ASSETMGMTA-[0-9]{4}'; then
+            echo "Error: Most recent commit message does not follow the required format 'ASSETMGMTA-****'"
+            echo "Found commit message: $COMMIT_MSG"
+            echo "Please update your most recent commit to follow the format: ASSETMGMTA-1234"
             exit 1
           fi
-
-          echo "✅ The most recent commit message is valid!"
           
