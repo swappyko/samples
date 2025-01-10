@@ -35,3 +35,4 @@ jobs:
       NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
       SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
       SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+
