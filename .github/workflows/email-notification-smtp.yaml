@@ -21,7 +21,7 @@ on:
 jobs:
   send-notification:
     runs-on: ubuntu-latest
-    if: failure()
+    if: always()
     
     steps:
       - name: Send email notification
