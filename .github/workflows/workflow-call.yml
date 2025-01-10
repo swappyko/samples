@@ -1,0 +1,39 @@
+# .github/workflows/validate-commit.yml
+name: Reusable Workflow
+
+on:
+  workflow_call:
+    inputs:
+      config:
+        required: true
+        type: string
+    outputs:
+      result:
+        description: "The result of the process"
+        value: ${{ jobs.reusable-job.outputs.job_result }}
+
+jobs:
+  reusable-job:
+    runs-on: ubuntu-latest
+    outputs:
+      job_result: ${{ steps.set-result.outputs.result }}
+    
+    steps:
+      - name: Process with config
+        id: set-result
+        run: |
+          echo "Processing with config: ${{ inputs.config }}"
+          echo "result=success" >> $GITHUB_OUTPUT
+
+# .github/workflows/caller-workflow.yml
+name: Caller Workflow
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  call-workflow:
+    uses: ./.github/workflows/validate-commit.yml
+    with:
+      config: "production"
