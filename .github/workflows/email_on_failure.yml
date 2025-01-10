@@ -14,7 +14,8 @@ on:
 jobs:
   failure-notification:
     runs-on: ubuntu-latest
-    if: failure()  # Only run if the previous job failed
+    #if: failure()  # Only run if the previous job failed
+    if: always()  # This will run even if the job fails or not
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
