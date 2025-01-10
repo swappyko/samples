@@ -1,6 +1,7 @@
 # .github/workflows/validate-commit.yml
 name: Reusable Workflow
 
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
