@@ -27,7 +27,7 @@ jobs:
   notify:
     needs: [build]
     if: always() # This ensures the notification job runs even if build fails
-    uses: ./.github/workflows/email-notification.yml
+    uses: ./.github/workflows/email-notification-smtp.yaml
     with:
       workflow_name: ${{ github.workflow }}
       repo_name: 'samples'
