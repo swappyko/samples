@@ -10,3 +10,4 @@ jobs:
     uses: ./.github/workflows/validate-commit.yml
     with:
       config: "production"  # Example of passing the config input
+
