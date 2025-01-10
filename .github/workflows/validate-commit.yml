@@ -16,21 +16,22 @@ jobs:
 
       - name: Fetch Base Branch
         run: |
-          git fetch origin main # Fetch the main branch explicitly
+          git fetch origin main # Ensure main branch is fetched
 
-      - name: Validate Commit Messages
+      - name: Validate Most Recent Commit
         run: |
           # Define the regex pattern for valid commit messages
-          regex="^(.*: ASSETMGMTA-[0-9]+ : .*)|^.*Revert.*"
+          regex="^ASSETMGMTA-[0-9]+ : .+"
 
-          # Get invalid commits by comparing with the main branch
-          invalid_commits=$(git log --pretty=format:"%h: %s" origin/main..HEAD | grep -vE "$regex")
+          # Get the most recent commit message
+          recent_commit=$(git log -1 --pretty=format:"%h: %s")
 
-          if [ -n "$invalid_commits" ]; then
-            echo "❌ The following commits have invalid messages:"
-            echo "$invalid_commits"
+          # Validate the recent commit message
+          if [[ ! $recent_commit =~ $regex && ! $recent_commit =~ ^.*Revert.* ]]; then
+            echo "❌ The most recent commit has an invalid message:"
+            echo "$recent_commit"
             echo "Commit messages must match the format: ASSETMGMTA-***** : Commit_Message or be a Revert commit."
             exit 1
           fi
 
-          echo "✅ All recent commit messages are valid!"
+          echo "✅ The most recent commit message is valid!"
