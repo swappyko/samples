@@ -1,27 +1,12 @@
-# .github/workflows/validate-commit.yml
-name: Reusable Workflow
+# .github/workflows/workflow-call.yml
+name: Workflow Call Example
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # Fetch full history for all branches
-  workflow_call:
-    inputs:
-      config:
-        required: true
-        type: string
-    outputs:
-      result:
-        description: "The result of the process"
-        value: ${{ jobs.reusable-job.outputs.job_result }}
-
 jobs:
-  call-workflow:
+  call-validate-commit:
     uses: ./.github/workflows/validate-commit.yml
     with:
-      config: "production"
+      config: "production"  # Example of passing the config input
