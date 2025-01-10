@@ -1,8 +1,12 @@
+# .github/workflows/validate-commit.yml
 name: Validate Commit Messages in PR
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_call:
+    inputs:
+      config:
+        required: true
+        type: string
 
 jobs:
   validate-commits:
@@ -30,4 +34,3 @@ jobs:
             echo "Please update your most recent commit to follow the format: ASSETMGMTA-1234"
             exit 1
           fi
-  
