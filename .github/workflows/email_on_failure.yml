@@ -1,15 +1,9 @@
 name: Notify on Failure
 
 on:
-  pull_request:
-    branches: [ main ]
-    types: [opened, synchronize, reopened]
-  workflow_dispatch:
-    inputs:
-      reason:
-        description: 'The reason for running the workflow'
-        required: true
-        default: 'Manual run'
+  push:
+    branches:
+      - '*'
 
 jobs:
   failure-notification:
