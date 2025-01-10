@@ -30,4 +30,4 @@ jobs:
             echo "Please update your most recent commit to follow the format: ASSETMGMTA-1234"
             exit 1
           fi
-          
+  
