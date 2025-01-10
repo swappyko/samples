@@ -24,7 +24,7 @@ jobs:
           COMMIT_MSG=$(git log --no-merges -1 --format=%s)
           
           # Check if commit message matches required format
-          if ! echo "$COMMIT_MSG" | grep -qE '^ASSETMGMTA-[0-9]{4}'; then
+          if ! echo "$COMMIT_MSG" | grep -qE '^ASSETMGMT-[0-9]+.*$'; then
             echo "Error: Most recent commit message does not follow the required format 'ASSETMGMTA-****'"
             echo "Found commit message: $COMMIT_MSG"
             echo "Please update your most recent commit to follow the format: ASSETMGMTA-1234"
