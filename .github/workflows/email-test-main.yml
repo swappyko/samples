@@ -30,7 +30,7 @@ jobs:
     uses: ./.github/workflows/email-notification.yml
     with:
       workflow_name: ${{ github.workflow }}
-      repo_name: 'test1'
+      repo_name: 'samples'
     secrets:
       NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
       SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
