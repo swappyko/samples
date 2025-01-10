@@ -43,3 +43,4 @@ jobs:
           fi
 
           echo "✅ The most recent commit message is valid!"
+          
