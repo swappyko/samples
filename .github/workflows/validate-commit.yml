@@ -1,0 +1,24 @@
+name: Validate Commit Messages
+ 
+on:
+  pull_request:
+    types: [opened, synchronize, edited]
+ 
+jobs:
+  check-commits:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+ 
+      - name: Validate Commit Messages
+        run: |
+          invalid_commits=$(git log --pretty=format:"%h: %s" origin/main..HEAD | grep -vE "^(.*: ASSETMGMTA-[0-9]+ : .*)|^.*Revert.*")
+          if [[ -n "$invalid_commits" ]]; then
+            echo "Invalid commit messages found:"
+            echo "$invalid_commits"
+            exit 1
+          else
+            echo "All commit messages are valid."
+          fi
