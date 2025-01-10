@@ -1,0 +1,37 @@
+# test1-repo/.github/workflows/main.yml
+name: Main Workflow
+
+on:
+  push:
+    branches: [ email-trigger-poc ]
+  pull_request:
+    branches: [ email-trigger-poc ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build step
+        run: |
+          echo "Running build..."
+          # Your build steps here
+          
+      - name: Test step
+        run: |
+          echo "Running tests..."
+          # Your test steps here
+          # exit 1  # Uncomment to simulate failure
+
+  notify:
+    needs: [build]
+    if: always() # This ensures the notification job runs even if build fails
+    uses: ./.github/workflows/email-notification.yml
+    with:
+      workflow_name: ${{ github.workflow }}
+      repo_name: 'test1'
+    secrets:
+      NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
+      SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
