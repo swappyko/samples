@@ -1,24 +1,39 @@
-name: Validate Commit Messages
- 
+name: Validate Commit Messages in PR
+
 on:
   pull_request:
-    types: [opened, synchronize, edited]
- 
+    types: [opened, synchronize, reopened]
+
 jobs:
-  check-commits:
+  validate-commits:
     runs-on: ubuntu-latest
- 
+
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
- 
+        with:
+          fetch-depth: 0 # Fetch all history for all branches
+
+      - name: Fetch Base Branch
+        run: git fetch origin $GITHUB_BASE_REF
+
       - name: Validate Commit Messages
         run: |
-          invalid_commits=$(git log --pretty=format:"%h: %s" origin/main..HEAD | grep -vE "^(.*: ASSETMGMTA-[0-9]+ : .*)|^.*Revert.*")
-          if [[ -n "$invalid_commits" ]]; then
-            echo "Invalid commit messages found:"
-            echo "$invalid_commits"
-            exit 1
-          else
-            echo "All commit messages are valid."
-          fi
+          # Define the regex pattern for valid commit messages
+          regex="^ASSETMGMT-\d+ : .+$"
+
+          # Get the list of commits in the current pull request
+          recent_commits=$(git log origin/$GITHUB_BASE_REF..HEAD --pretty=format:"%H")
+
+          # Loop through the recent commits and validate their messages
+          for commit in $recent_commits; do
+            message=$(git show -s --format=%s $commit)
+
+            if [[ ! "$message" =~ $regex ]]; then
+              echo "❌ Invalid commit message: '$message'"
+              echo "Commit messages must match the format: ASSETMGMT-***** : Commit_Message"
+              exit 1
+            fi
+          done
+
+          echo "✅ All recent commit messages are valid!"
