@@ -23,13 +23,21 @@ jobs:
           # Define the regex pattern for valid commit messages
           regex="^ASSETMGMTA-[0-9]+ : .+"
 
-          # Get the most recent commit message
-          recent_commit=$(git log -1 --pretty=format:"%h: %s")
+          # Get the most recent commit message and type
+          recent_commit_message=$(git log -1 --pretty=format:"%s")
+          recent_commit_type=$(git log -1 --pretty=format:"%h: %s")
+          
+          # Check if the most recent commit is a merge commit
+          if [[ $recent_commit_message == Merge* ]]; then
+            echo "✅ Skipping merge commit:"
+            echo "$recent_commit_type"
+            exit 0
+          fi
 
           # Validate the recent commit message
-          if [[ ! $recent_commit =~ $regex && ! $recent_commit =~ ^.*Revert.* ]]; then
+          if [[ ! $recent_commit_message =~ $regex && ! $recent_commit_message =~ ^.*Revert.* ]]; then
             echo "❌ The most recent commit has an invalid message:"
-            echo "$recent_commit"
+            echo "$recent_commit_message"
             echo "Commit messages must match the format: ASSETMGMTA-***** : Commit_Message or be a Revert commit."
             exit 1
           fi
