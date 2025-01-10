@@ -1,0 +1,46 @@
+# .github/workflows/email-notification.yml
+name: Reusable Email Notification
+
+on:
+  workflow_call:
+    inputs:
+      workflow_name:
+        required: true
+        type: string
+      repo_name:
+        required: true
+        type: string
+    secrets:
+      NOTIFICATION_EMAIL:
+        required: true
+      SMTP_USERNAME:
+        required: true
+      SMTP_PASSWORD:
+        required: true
+
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    if: failure()
+    
+    steps:
+      - name: Send email notification
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "❌ Workflow Failed: ${{ inputs.workflow_name }} in ${{ inputs.repo_name }}"
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: GitHub Actions
+          body: |
+            Workflow failure notification:
+            
+            Repository: ${{ inputs.repo_name }}
+            Workflow: ${{ inputs.workflow_name }}
+            
+            For more details, please check:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            This is an automated message.
