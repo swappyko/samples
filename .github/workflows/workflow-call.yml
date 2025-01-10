@@ -20,7 +20,6 @@ on:
         description: "The result of the process"
         value: ${{ jobs.reusable-job.outputs.job_result }}
 
-
 jobs:
   call-workflow:
     uses: ./.github/workflows/validate-commit.yml
