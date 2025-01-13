@@ -1,5 +1,5 @@
-# .github/workflows/validate-commit.yml
-name: Validate Commit Messages in PR
+# .github/workflows/commit-check.yml
+name: Check Commit Message Format
 
 on:
   workflow_call:
@@ -7,30 +7,124 @@ on:
       config:
         required: true
         type: string
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
 
 jobs:
-  validate-commits:
+  check-commit-message:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch full history for all branches
+          fetch-depth: 0  # Fetch all history for all branches and tags
 
-      - name: Fetch Base Branch
+      - name: Check commit messages
         run: |
-          git fetch origin main # Ensure main branch is fetched
-
-      - name: Validate most recent commit message
-        run: |
-          # Get the most recent non-merge commit
-          COMMIT_MSG=$(git log --no-merges -1 --format=%s)
+          # Function to validate commit message format
+          validate_message() {
+            if ! echo "$1" | grep -qE '^ASSETMGMTA-[0-9]+'; then
+              echo "❌ Invalid commit message format: $1"
+              echo "Commit messages must start with 'ASSETMGMTA-' followed by a number"
+              return 1
+            fi
+            return 0
+          }
           
-          # Check if commit message matches required format
-          if ! echo "$COMMIT_MSG" | grep -qE '^ASSETMGMTA-[0-9]+.*$'; then
-            echo "Error: Most recent commit message does not follow the required format 'ASSETMGMTA-****'"
-            echo "Found commit message: $COMMIT_MSG"
-            echo "Please update your most recent commit to follow the format: ASSETMGMTA-1234"
-            exit 1
+          # For PRs, check all commits in the PR
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "Checking commits in PR..."
+            
+            # Get the base SHA of the PR
+            BASE_SHA=$(git rev-parse ${{ github.event.pull_request.base.sha }})
+            
+            # Get all commits in the PR
+            COMMITS=$(git rev-list --no-merges $BASE_SHA..${{ github.event.pull_request.head.sha }})
+            
+            INVALID_COMMITS=0
+            
+            for COMMIT in $COMMITS; do
+              MESSAGE=$(git log --format=%B -n 1 $COMMIT)
+              if ! validate_message "$MESSAGE"; then
+                INVALID_COMMITS=$((INVALID_COMMITS + 1))
+                echo "Found invalid commit: $COMMIT"
+                echo "Message: $MESSAGE"
+                echo "---"
+              fi
+            done
+            
+            if [ $INVALID_COMMITS -gt 0 ]; then
+              echo "❌ Found $INVALID_COMMITS commit(s) with invalid format"
+              echo "Please fix the commit messages to follow the format: ASSETMGMTA-<number>"
+              exit 1
+            fi
+          
+          # For push events, check the latest commit
+          else
+            echo "Checking latest commit..."
+            MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
+            if ! validate_message "$MESSAGE"; then
+              exit 1
+            fi
           fi
+          
+          echo "✅ All commit messages follow the required format"
+
+      - name: Comment on PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `❌ This PR contains commits that don't follow the required message format.
+
+              All commit messages must start with \`ASSETMGMTA-\` followed by a number.
+              Examples of valid formats:
+              - ASSETMGMTA-1234 Add new feature
+              - ASSETMGMTA-5678 Fix bug in login system
+              
+              Please rewrite your commit messages to follow this format.
+              You can use \`git rebase -i\` to edit commit messages.`
+            })
+# # .github/workflows/validate-commit.yml
+# name: Validate Commit Messages in PR
+
+# on:
+#   workflow_call:
+#     inputs:
+#       config:
+#         required: true
+#         type: string
+
+# jobs:
+#   validate-commits:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0 # Fetch full history for all branches
+
+#       - name: Fetch Base Branch
+#         run: |
+#           git fetch origin main # Ensure main branch is fetched
+
+#       - name: Validate most recent commit message
+#         run: |
+#           # Get the most recent non-merge commit
+#           COMMIT_MSG=$(git log --no-merges -1 --format=%s)
+          
+#           # Check if commit message matches required format
+#           if ! echo "$COMMIT_MSG" | grep -qE '^ASSETMGMTA-[0-9]+.*$'; then
+#             echo "Error: Most recent commit message does not follow the required format 'ASSETMGMTA-****'"
+#             echo "Found commit message: $COMMIT_MSG"
+#             echo "Please update your most recent commit to follow the format: ASSETMGMTA-1234"
+#             exit 1
+#           fi
