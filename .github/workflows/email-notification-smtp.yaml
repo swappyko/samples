@@ -22,9 +22,9 @@ on:
   #     - completed
 
 jobs:
-  send-email:
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+  send-notification:
     runs-on: ubuntu-latest
+    if: always()
 
     steps:
       - name: Install msmtp
