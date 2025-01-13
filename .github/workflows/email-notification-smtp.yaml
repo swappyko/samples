@@ -1,46 +1,86 @@
-# .github/workflows/email-notification.yml
-name: Reusable Email Notification
+name: Email Notification on Failure
 
 on:
-  workflow_call:
-    inputs:
-      workflow_name:
-        required: true
-        type: string
-      repo_name:
-        required: true
-        type: string
-    secrets:
-      NOTIFICATION_EMAIL:
-        required: true
-      SMTP_USERNAME:
-        required: true
-      SMTP_PASSWORD:
-        required: true
+  workflow_run:
+    workflows: ["Main Workflow"]  # Replace with the name of your main workflow
+    types:
+      - completed
 
 jobs:
-  send-notification:
+  send-email:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: ubuntu-latest
-    if: always()
-    
+
     steps:
-      - name: Send email notification
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.office365.com
-          server_port: 587
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          subject: "❌ Workflow Failed: ${{ inputs.workflow_name }} in ${{ inputs.repo_name }}"
-          to: ${{ secrets.NOTIFICATION_EMAIL }}
-          from: GitHub Actions
-          body: |
-            Workflow failure notification:
+      - name: Install msmtp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y msmtp msmtp-mta
+
+      - name: Configure msmtp
+        run: |
+          echo "defaults" > /home/runner/.msmtprc
+          echo "auth           on" >> /home/runner/.msmtprc
+          echo "tls            on" >> /home/runner/.msmtprc
+          echo "tls_starttls   on" >> /home/runner/.msmtprc
+          echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" >> /home/runner/.msmtprc
+          echo "logfile        /home/runner/msmtp.log" >> /home/runner/.msmtprc
+          echo "account        default" >> /home/runner/.msmtprc
+          echo "host           smtp.office365.com" >> /home/runner/.msmtprc
+          echo "port           587" >> /home/runner/.msmtprc
+          echo "from           ${{ secrets.NOTIFICATION_EMAIL }}" >> /home/runner/.msmtprc
+          echo "user           ${{ secrets.SMTP_USERNAME }}" >> /home/runner/.msmtprc
+          #echo "password       ${{ secrets.SMTP_PASSWORD }}" >> /home/runner/.msmtprc
+          chmod 600 /home/runner/.msmtprc
+
+      - name: Send failure notification email
+        run: |
+          echo -e "Subject: Workflow Failed\n\nThe workflow ${{ github.event.workflow_run.name }} failed on repository ${{ github.repository }}. Check the logs here: ${{ github.event.workflow_run.html_url }}" | msmtp ${{ secrets.SMTP_USERNAME }}
+
+
+# # .github/workflows/email-notification.yml
+# name: Reusable Email Notification
+
+# on:
+#   workflow_call:
+#     inputs:
+#       workflow_name:
+#         required: true
+#         type: string
+#       repo_name:
+#         required: true
+#         type: string
+#     secrets:
+#       NOTIFICATION_EMAIL:
+#         required: true
+#       SMTP_USERNAME:
+#         required: true
+#       SMTP_PASSWORD:
+#         required: true
+
+# jobs:
+#   send-notification:
+#     runs-on: ubuntu-latest
+#     if: always()
+    
+#     steps:
+#       - name: Send email notification
+#         uses: dawidd6/action-send-mail@v3
+#         with:
+#           server_address: smtp.office365.com
+#           server_port: 587
+#           username: ${{ secrets.SMTP_USERNAME }}
+#           password: ${{ secrets.SMTP_PASSWORD }}
+#           subject: "❌ Workflow Failed: ${{ inputs.workflow_name }} in ${{ inputs.repo_name }}"
+#           to: ${{ secrets.NOTIFICATION_EMAIL }}
+#           from: GitHub Actions
+#           body: |
+#             Workflow failure notification:
             
-            Repository: ${{ inputs.repo_name }}
-            Workflow: ${{ inputs.workflow_name }}
+#             Repository: ${{ inputs.repo_name }}
+#             Workflow: ${{ inputs.workflow_name }}
             
-            For more details, please check:
-            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+#             For more details, please check:
+#             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
             
-            This is an automated message. 
+#             This is an automated message. 
