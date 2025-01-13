@@ -1,7 +1,6 @@
 # .github/workflows/commit-check.yml
 name: Check Commit Message Format
 
-
 # Add permissions at workflow level
 permissions:
   contents: read
