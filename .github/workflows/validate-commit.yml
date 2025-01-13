@@ -33,76 +33,77 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check commit messages
-        id: check
+      - name: Validate Commit Messages
+        id: validate
         run: |
-          # Function to validate commit message format
+          # Define a function to validate commit messages
           validate_message() {
-            if ! echo "$1" | grep -qE '^ASSETMGMTA-[0-9]+'; then
-              echo "❌ Invalid commit message format: $1"
+            if [[ ! "$1" =~ ^ASSETMGMTA-[0-9]+ ]]; then
+              echo "❌ Invalid commit message: $1"
               return 1
             fi
             return 0
           }
-          
+
           INVALID_MESSAGES=""
-          
+          INVALID_COUNT=0
+
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "Checking commits in PR..."
-            
-            BASE_SHA=$(git rev-parse ${{ github.event.pull_request.base.sha }})
-            COMMITS=$(git rev-list --no-merges $BASE_SHA..${{ github.event.pull_request.head.sha }})
-            
-            INVALID_COMMITS=0
-            
+            echo "Checking commits in the Pull Request..."
+
+            # Get commits in the PR
+            COMMITS=$(git log --format=%H ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+
             for COMMIT in $COMMITS; do
               MESSAGE=$(git log --format=%B -n 1 $COMMIT)
               if ! validate_message "$MESSAGE"; then
-                INVALID_COMMITS=$((INVALID_COMMITS + 1))
-                INVALID_MESSAGES="${INVALID_MESSAGES}\\n- ${MESSAGE}"
+                INVALID_COUNT=$((INVALID_COUNT + 1))
+                INVALID_MESSAGES="${INVALID_MESSAGES}\n- ${MESSAGE}"
               fi
             done
-            
-            if [ $INVALID_COMMITS -gt 0 ]; then
+
+            if [[ $INVALID_COUNT -gt 0 ]]; then
+              echo "Invalid commit messages found:"
+              echo -e "$INVALID_MESSAGES"
               echo "invalid_messages=${INVALID_MESSAGES}" >> $GITHUB_OUTPUT
-              echo "❌ Found $INVALID_COMMITS commit(s) with invalid format"
               exit 1
             fi
           else
-            MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
-            if ! validate_message "$MESSAGE"; then
-              echo "invalid_messages=- ${MESSAGE}" >> $GITHUB_OUTPUT
-              exit 1
-            fi
+            echo "Not a pull request event. Skipping validation."
           fi
-          
-          echo "✅ All commit messages follow the required format"
 
-      - name: Add PR Comment
+          echo "✅ All commit messages are valid."
+
+      - name: Comment on PR
         if: failure() && github.event_name == 'pull_request'
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ❌ This PR contains commits that don't follow the required message format.
+            ❌ This pull request contains invalid commit messages.
             
-            Invalid commit messages found:
-            ${{ steps.check.outputs.invalid_messages }}
+            **Invalid commit messages:**
+            ${{ steps.validate.outputs.invalid_messages }}
             
-            All commit messages must start with `ASSETMGMTA-` followed by a number.
-            Examples of valid formats:
-            - ASSETMGMTA-1234 Add new feature
-            - ASSETMGMTA-5678 Fix bug in login system
+            All commit messages must follow the required format:
+            ```
+            ASSETMGMTA-<number> <message>
+            ```
             
-            Please rewrite your commit messages to follow this format.
-            You can use `git rebase -i` to edit commit messages.
+            **Examples of valid commit messages:**
+            - `ASSETMGMTA-1234 Add new feature`
+            - `ASSETMGMTA-5678 Fix login bug`
 
-      - name: Check Status
+            Please update your commit messages using:
+            ```
+            git rebase -i HEAD~<number_of_commits>
+            git commit --amend -m "ASSETMGMTA-<number> <message>"
+            git push --force
+            ```
+
+      - name: Fail Build
         if: failure()
-        run: |
-          echo "Commit message validation failed"
-          exit 1
-
+        run: exit 1
 
 # # .github/workflows/validate-commit.yml
 # name: Validate Commit Messages in PR
