@@ -1,10 +1,25 @@
 name: Email Notification on Failure
 
 on:
-  workflow_run:
-    workflows: ["Main Workflow"]  # Replace with the name of your main workflow
-    types:
-      - completed
+  workflow_call:
+    inputs:
+      workflow_name:
+        required: true
+        type: string
+      repo_name:
+        required: true
+        type: string
+    secrets:
+      NOTIFICATION_EMAIL:
+        required: true
+      SMTP_USERNAME:
+        required: true
+      SMTP_PASSWORD:
+        required: true
+  # workflow_run:
+  #   workflows: ["Main Workflow"]  # Replace with the name of your main workflow
+  #   types:
+  #     - completed
 
 jobs:
   send-email:
