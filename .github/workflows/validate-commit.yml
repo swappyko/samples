@@ -22,32 +22,33 @@ on:
 jobs:
   check-commit-message:
     runs-on: ubuntu-latest
+    outputs:
+      invalid_messages: ${{ steps.check.outputs.invalid_messages }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for all branches and tags
+          fetch-depth: 0
 
       - name: Check commit messages
+        id: check
         run: |
           # Function to validate commit message format
           validate_message() {
             if ! echo "$1" | grep -qE '^ASSETMGMTA-[0-9]+'; then
               echo "❌ Invalid commit message format: $1"
-              echo "Commit messages must start with 'ASSETMGMTA-' followed by a number"
               return 1
             fi
             return 0
           }
           
-          # For PRs, check all commits in the PR
+          INVALID_MESSAGES=""
+          
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             echo "Checking commits in PR..."
             
-            # Get the base SHA of the PR
             BASE_SHA=$(git rev-parse ${{ github.event.pull_request.base.sha }})
-            
-            # Get all commits in the PR
             COMMITS=$(git rev-list --no-merges $BASE_SHA..${{ github.event.pull_request.head.sha }})
             
             INVALID_COMMITS=0
@@ -56,56 +57,49 @@ jobs:
               MESSAGE=$(git log --format=%B -n 1 $COMMIT)
               if ! validate_message "$MESSAGE"; then
                 INVALID_COMMITS=$((INVALID_COMMITS + 1))
-                echo "Found invalid commit: $COMMIT"
-                echo "Message: $MESSAGE"
-                echo "---"
+                INVALID_MESSAGES="${INVALID_MESSAGES}\\n- ${MESSAGE}"
               fi
             done
             
             if [ $INVALID_COMMITS -gt 0 ]; then
+              echo "invalid_messages=${INVALID_MESSAGES}" >> $GITHUB_OUTPUT
               echo "❌ Found $INVALID_COMMITS commit(s) with invalid format"
-              echo "Please fix the commit messages to follow the format: ASSETMGMTA-<number>"
               exit 1
             fi
-          
-          # For push events, check the latest commit
           else
-            echo "Checking latest commit..."
             MESSAGE=$(git log --format=%B -n 1 ${{ github.sha }})
             if ! validate_message "$MESSAGE"; then
+              echo "invalid_messages=- ${MESSAGE}" >> $GITHUB_OUTPUT
               exit 1
             fi
           fi
           
           echo "✅ All commit messages follow the required format"
 
-
-      - name: Comment on PR
+      - name: Add PR Comment
         if: failure() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
+        uses: peter-evans/create-or-update-comment@v3
         with:
-          github-token: ${{ secrets.GIT_TOKEN }}
-          script: |
-            const invalidCommits = process.env.invalid_commits || '';
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ❌ This PR contains commits that don't follow the required message format.
             
-            const message = `❌ This PR contains commits that don't follow the required message format.
-
-            Invalid commit messages found:${invalidCommits}
+            Invalid commit messages found:
+            ${{ steps.check.outputs.invalid_messages }}
             
-            All commit messages must start with \`ASSETMGMTA-\` followed by a number.
+            All commit messages must start with `ASSETMGMTA-` followed by a number.
             Examples of valid formats:
             - ASSETMGMTA-1234 Add new feature
             - ASSETMGMTA-5678 Fix bug in login system
             
             Please rewrite your commit messages to follow this format.
-            You can use \`git rebase -i\` to edit commit messages.`;
-            
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: message
-            });
+            You can use `git rebase -i` to edit commit messages.
+
+      - name: Check Status
+        if: failure()
+        run: |
+          echo "Commit message validation failed"
+          exit 1
 
 
 # # .github/workflows/validate-commit.yml
