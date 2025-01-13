@@ -1,6 +1,12 @@
 # .github/workflows/commit-check.yml
 name: Check Commit Message Format
 
+# Add permissions at workflow level
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  
 on:
   workflow_call:
     inputs:
@@ -73,25 +79,35 @@ jobs:
           
           echo "✅ All commit messages follow the required format"
 
+
       - name: Comment on PR
         if: failure() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.GIT_TOKEN }}
           script: |
-            github.rest.issues.createComment({
+            const invalidCommits = process.env.invalid_commits || '';
+            
+            const message = `❌ This PR contains commits that don't follow the required message format.
+
+            Invalid commit messages found:${invalidCommits}
+            
+            All commit messages must start with \`ASSETMGMTA-\` followed by a number.
+            Examples of valid formats:
+            - ASSETMGMTA-1234 Add new feature
+            - ASSETMGMTA-5678 Fix bug in login system
+            
+            Please rewrite your commit messages to follow this format.
+            You can use \`git rebase -i\` to edit commit messages.`;
+            
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `❌ This PR contains commits that don't follow the required message format.
+              body: message
+            });
 
-              All commit messages must start with \`ASSETMGMTA-\` followed by a number.
-              Examples of valid formats:
-              - ASSETMGMTA-1234 Add new feature
-              - ASSETMGMTA-5678 Fix bug in login system
-              
-              Please rewrite your commit messages to follow this format.
-              You can use \`git rebase -i\` to edit commit messages.`
-            })
+
 # # .github/workflows/validate-commit.yml
 # name: Validate Commit Messages in PR
 
