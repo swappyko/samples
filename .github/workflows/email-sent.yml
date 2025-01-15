@@ -21,7 +21,10 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Install dependencies
+    - name: setup npm dependencies
+      run: npm init
+      
+    - name: Install npm
       run: npm install
 
     - name: Run tests
