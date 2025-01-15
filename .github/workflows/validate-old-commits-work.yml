@@ -1,0 +1,46 @@
+name: Validate Commit Messages
+
+on:
+  pull_request:
+    branches:
+      - main  # Adjust based on your default branch
+
+jobs:
+  validate-commits:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure full history is available for comparison
+
+      - name: Get Base and Head Commits
+        id: commits
+        run: |
+          # Fetch base branch
+          git fetch origin ${{ github.base_ref }}
+          # Get new commits in this PR
+          git log origin/${{ github.base_ref }}..HEAD --pretty=format:"%H" > new_commits.txt
+
+      - name: Validate New Commit Messages
+        run: |
+          # Define regex pattern for commit messages
+          REGEX="^ASSETMGMTA-[0-9]+$"
+
+          # Validate each new commit
+          while read -r commit_hash; do
+            # Get the commit message
+            message=$(git log -1 --pretty=format:"%s" "$commit_hash")
+            
+            # Validate against regex
+            if ! [[ "$message" =~ $REGEX ]]; then
+              echo "Invalid commit message: $message"
+              exit 1
+            fi
+          done < new_commits.txt
+        shell: bash
+
+      - name: Success
+        if: success()
+        run: echo "All commit messages are valid."
