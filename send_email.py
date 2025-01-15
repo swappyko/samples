@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Retrieve SMTP details from environment variables or GitHub secrets
-SMTP_SERVER = 'smtp.office365.com'
+SMTP_SERVER = 'smtp-mail.outlook.com'
 SMTP_PORT = 587
 SMTP_USER = 'swapnil_konde@hotmail.com'
 SMTP_PASSWORD = 'npuhmevqjhadwovo'
