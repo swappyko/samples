@@ -49,7 +49,7 @@ jobs:
         echo "tls on" >> ~/.msmtprc
         echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" >> ~/.msmtprc
         echo "logfile ~/.msmtp.log" >> ~/.msmtprc
-        echo "auth on >> ~/.msmtprc
+        echo "auth on" >> ~/.msmtprc
         chmod 600 ~/.msmtprc
 
         echo -e "Subject: GitHub Actions Workflow Failed\n\nHello,\n\nThe GitHub Actions workflow has failed. Please check the build logs." | msmtp swapnil_konde@hotmail.com
