@@ -1,0 +1,25 @@
+name: Enforce Commit Message Format
+
+on:
+  push:
+    branches:
+      - main # Adjust as per your branch names
+  pull_request:
+    branches:
+      - main # Adjust as per your branch names
+
+jobs:
+  validate-commit-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Commit Messages
+        run: |
+          git log --format=%s ${{ github.event.before }}..HEAD | while read -r message; do
+            if [[ ! "$message" =~ ^ABCDEFG-[0-9]+$ ]]; then
+              echo "Invalid commit message: $message"
+              exit 1
+            fi
+          done
