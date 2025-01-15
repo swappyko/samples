@@ -6,7 +6,7 @@ on:
       - main  # Adjust based on your default branch
 
 jobs:
-  validate-commits:
+  validate-commits-work:
     runs-on: ubuntu-latest
 
     steps:
