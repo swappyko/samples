@@ -3,8 +3,18 @@ name: Send SMTP Email
 on:
   push:
     branches:
-      - main
+      - ASSETMGMTA-12345
+  pull_request:
+    branches:
+      - ASSETMGMTA-12345
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 jobs:
   send_email:
     runs-on: ubuntu-latest
