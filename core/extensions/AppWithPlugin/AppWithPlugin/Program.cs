@@ -21,12 +21,11 @@ namespace AppWithPlugin
 
                 string[] pluginPaths = new string[]
                 {
-                    @"HelloPlugin\bin\Debug\netcoreapp3.0\HelloPlugin.dll",
-                    @"JsonPlugin\bin\Debug\netcoreapp3.0\JsonPlugin.dll",
-                    @"XcopyablePlugin\bin\Debug\netcoreapp3.0\XcopyablePlugin.dll",
-                    @"OldJsonPlugin\bin\Debug\netcoreapp2.1\OldJsonPlugin.dll",
-                    @"FrenchPlugin\bin\Debug\netcoreapp2.1\FrenchPlugin.dll",
-                    @"UVPlugin\bin\Debug\netcoreapp2.1\UVPlugin.dll",
+                    @"HelloPlugin\bin\Debug\net8.0\HelloPlugin.dll",
+                    @"JsonPlugin\bin\Debug\net8.0\JsonPlugin.dll",
+                    @"OldJsonPlugin\bin\Debug\net8.0\OldJsonPlugin.dll",
+                    @"FrenchPlugin\bin\Debug\net8.0\FrenchPlugin.dll",
+                    @"UVPlugin\bin\Debug\net8.0\UVPlugin.dll",
                 };
 
                 IEnumerable<ICommand> commands = pluginPaths.SelectMany(pluginPath =>
@@ -79,7 +78,7 @@ namespace AppWithPlugin
             string pluginLocation = Path.GetFullPath(Path.Combine(root, relativePath.Replace('\\', Path.DirectorySeparatorChar)));
             Console.WriteLine($"Loading commands from: {pluginLocation}");
             PluginLoadContext loadContext = new PluginLoadContext(pluginLocation);
-            return loadContext.LoadFromAssemblyName(new AssemblyName(Path.GetFileNameWithoutExtension(pluginLocation)));
+            return loadContext.LoadFromAssemblyName(AssemblyName.GetAssemblyName(pluginLocation));
         }
 
         static IEnumerable<ICommand> CreateCommands(Assembly assembly)

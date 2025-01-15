@@ -1,4 +1,4 @@
-#region Sample_FirstTest
+﻿#region Sample_FirstTest
 using NUnit.Framework;
 using Prime.Services;
 
@@ -20,9 +20,9 @@ namespace Prime.UnitTests.Services
         {
             var result = _primeService.IsPrime(1);
 
-            Assert.IsFalse(result, "1 should not be prime");
+            Assert.That(result, Is.False, "1 should not be prime");
         }
-#endregion
+        #endregion
         #region Sample_TestCode
         [TestCase(-1)]
         [TestCase(0)]
@@ -31,7 +31,7 @@ namespace Prime.UnitTests.Services
         {
             var result = _primeService.IsPrime(value);
 
-            Assert.IsFalse(result, $"{value} should not be prime");
+            Assert.That(result, Is.False, $"{value} should not be prime");
         }
         #endregion
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace ExpressionTreeSamples
 {
@@ -25,21 +24,23 @@ namespace ExpressionTreeSamples
     public class ExpressionTreeExecutionSampleTwo : Sample
     {
         public override string Name { get; } = "Executing Expression Trees, Sample 2: Bound Variables";
-        
+
         public override void Run()
         {
             var del = CreateBoundFunc();
             Console.WriteLine(del(5));
 
-            try {
+            try
+            {
                 var del2 = CreateBoundResource();
                 Console.WriteLine(del2(5));
-            } catch (ObjectDisposedException e)
+            }
+            catch (ObjectDisposedException e)
             {
                 Console.WriteLine(e.ToString());
             }
         }
-        
+
         private static Func<int, int> CreateBoundFunc()
         {
             var constant = 5; // constant is captured by the expression tree

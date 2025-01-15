@@ -9,7 +9,7 @@ namespace Join
         // A left outer join is like a cross join, except that all the left hand side elements get included at least once,
         // even if they don't match any right hand side elements. Note how Vegetables shows up in the output even though
         // it has no matching products.
-        // Output: 
+        // Output:
         // Chai: Beverages
         // Chang: Beverages
         // Guarana Fantastica: Beverages
@@ -74,7 +74,7 @@ namespace Join
                 from c in categories
                 join p in products on c equals p.Category into ps
                 from p in ps.DefaultIfEmpty()
-                select new {Category = c, ProductName = p == null ? "(No products)" : p.ProductName};
+                select new { Category = c, ProductName = p == null ? "(No products)" : p.ProductName };
 
             foreach (var v in q)
             {
@@ -85,7 +85,7 @@ namespace Join
         // A left outer join is like a cross join, except that all the left hand side elements get included at least once,
         // even if they don't match any right hand side elements. Note how Vegetables shows up in the output even though
         // it has no matching products.
-        // Output: 
+        // Output:
         // Chai: Beverages
         // Chang: Beverages
         // Guarana Fantastica: Beverages
@@ -148,9 +148,9 @@ namespace Join
             List<Product> products = Data.Products;
 
             var q =
-                categories.GroupJoin(products, c => c, p => p.Category, (c, ps) => new {c, ps})
+                categories.GroupJoin(products, c => c, p => p.Category, (c, ps) => new { c, ps })
                     .SelectMany(@t => @t.ps.DefaultIfEmpty(),
-                        (@t, p) => new {Category = @t.c, ProductName = p == null ? "(No products)" : p.ProductName});
+                        (@t, p) => new { Category = @t.c, ProductName = p == null ? "(No products)" : p.ProductName });
 
             foreach (var v in q)
             {

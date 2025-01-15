@@ -10,7 +10,6 @@
 
 namespace MakeConst {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -20,10 +19,10 @@ namespace MakeConst {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -37,10 +36,10 @@ namespace MakeConst {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MakeConst.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MakeConst.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -52,7 +51,7 @@ namespace MakeConst {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -64,7 +63,7 @@ namespace MakeConst {
         /// <summary>
         ///   Looks up a localized string similar to Make Constant..
         /// </summary>
-        public static string AnalyzerDescription {
+        internal static string AnalyzerDescription {
             get {
                 return ResourceManager.GetString("AnalyzerDescription", resourceCulture);
             }
@@ -73,7 +72,7 @@ namespace MakeConst {
         /// <summary>
         ///   Looks up a localized string similar to can be made constant.
         /// </summary>
-        public static string AnalyzerMessageFormat {
+        internal static string AnalyzerMessageFormat {
             get {
                 return ResourceManager.GetString("AnalyzerMessageFormat", resourceCulture);
             }
@@ -82,7 +81,7 @@ namespace MakeConst {
         /// <summary>
         ///   Looks up a localized string similar to Variable can be made constant..
         /// </summary>
-        public static string AnalyzerTitle {
+        internal static string AnalyzerTitle {
             get {
                 return ResourceManager.GetString("AnalyzerTitle", resourceCulture);
             }

@@ -54,7 +54,7 @@ namespace Host
             // when the unload completes.
             alcWeakRef = new WeakReference(alc);
 
-            // Load the plugin assembly into the HostAssemblyLoadContext. 
+            // Load the plugin assembly into the HostAssemblyLoadContext.
             // NOTE: the assemblyPath must be an absolute path.
             Assembly a = alc.LoadFromAssemblyPath(assemblyPath);
 
@@ -83,10 +83,10 @@ namespace Host
 #else
             string configName = "Release";
 #endif
-            string pluginFullPath = Path.Combine(currentAssemblyDirectory, $"..\\..\\..\\..\\Plugin\\bin\\{configName}\\netcoreapp3.0\\Plugin.dll");
+            string pluginFullPath = Path.Combine(currentAssemblyDirectory, $"..\\..\\..\\..\\Plugin\\bin\\{configName}\\net7.0\\Plugin.dll");
             ExecuteAndUnload(pluginFullPath, out hostAlcWeakRef);
 
-            // Poll and run GC until the AssemblyLoadContext is unloaded. 
+            // Poll and run GC until the AssemblyLoadContext is unloaded.
             // You don't need to do that unless you want to know when the context
             // got unloaded. You can just leave it to the regular GC.
             for (int i = 0; hostAlcWeakRef.IsAlive && (i < 10); i++)

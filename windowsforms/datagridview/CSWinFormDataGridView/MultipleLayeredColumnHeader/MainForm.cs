@@ -2,8 +2,8 @@
 * Module Name:  MultipleLayeredColumnHeader
 * Project:      CSWinFormDataGridView
 * Copyright (c) Microsoft Corporation.
-* 
-* 
+*
+*
 * This sample demonstrates how to display multiple layer column headers on the DataGridView.
 \******************************************************************************************/
 
@@ -47,7 +47,7 @@ namespace CSWinFormDataGridView.MultipleLayeredColumnHeader
             this.dataGridView1.ColumnHeadersHeight =
                         this.dataGridView1.ColumnHeadersHeight * 2;
 
-            // Adjust the text alignment on the column headers to make the text display 
+            // Adjust the text alignment on the column headers to make the text display
             // at the center of the bottom;
             this.dataGridView1.ColumnHeadersDefaultCellStyle.Alignment =
                  DataGridViewContentAlignment.BottomCenter;
@@ -65,7 +65,7 @@ namespace CSWinFormDataGridView.MultipleLayeredColumnHeader
             // Data for the "merged" header cells
             string[] monthes = { "January", "February", "March" };
 
-            for (int j = 0; j < this.dataGridView1.ColumnCount; )
+            for (int j = 0; j < this.dataGridView1.ColumnCount;)
             {
                 // Get the column header cell bounds
                 Rectangle r1 = this.dataGridView1.GetCellDisplayRectangle(j, -1, true);
@@ -75,7 +75,7 @@ namespace CSWinFormDataGridView.MultipleLayeredColumnHeader
                 r1.Width = r1.Width * 2 - 2;
                 r1.Height = r1.Height / 2 - 2;
 
-                using (SolidBrush br = 
+                using (SolidBrush br =
                     new SolidBrush(
                         this.dataGridView1.ColumnHeadersDefaultCellStyle.BackColor))
                 {
@@ -87,8 +87,8 @@ namespace CSWinFormDataGridView.MultipleLayeredColumnHeader
                     e.Graphics.DrawLine(p, r1.X, r1.Bottom, r1.Right, r1.Bottom);
                 }
 
-                using( StringFormat format = new StringFormat())
-                using (SolidBrush br = 
+                using (StringFormat format = new StringFormat())
+                using (SolidBrush br =
                     new SolidBrush(
                         this.dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor))
                 {

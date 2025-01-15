@@ -6,7 +6,7 @@ Beginning with [.NET Core 3.0](https://github.com/dotnet/core-sdk#installers-and
 
 If you're new to .NET Core, here are a few resources to help you understand the advantages of .NET Core for building Windows applications:
 
-* [Blog: .NET Core 3 and Support for Windows Desktop Applications](https://blogs.msdn.microsoft.com/dotnet/2018/05/07/net-core-3-and-support-for-windows-desktop-applications/)
+* [Blog: .NET Core 3 and Support for Windows Desktop Applications](https://devblogs.microsoft.com/dotnet/net-core-3-and-support-for-windows-desktop-applications/)
 * [Video: Modernizing Desktop Apps on Windows 10 with .NET Core 3.0 and much more](https://channel9.msdn.com/events/Build/2018/BRK3501?term=scott%20hunter&pubDate=year&lang-en=true)
 
 ## Quality disclaimer
@@ -25,13 +25,13 @@ See [WPF Samples](https://www.github.com/Microsoft/wpf-samples) repo for additio
 
 ### Prerequisites and getting the tools
 
-Install Visual Studio 2019 preview from [https://visualstudio.microsoft.com/vs/preview](https://visualstudio.microsoft.com/vs/preview), selecting the **.NET desktop development** workload with the options: **.NET Framwork 4.7.2 development tools** and **.NET Core 2.2 development tools**.
+Install Visual Studio 2019 preview from [https://visualstudio.microsoft.com/vs/preview](https://visualstudio.microsoft.com/vs/preview), selecting the **.NET desktop development** workload with the options: **.NET Framework 4.7.2 development tools** and **.NET Core 2.2 development tools**.
 
 Install either the [preview build](https://dotnet.microsoft.com/download/dotnet-core/3.0) of the .NET Core 3.0 SDK or the latest daily build available in the [dotnet/code-sdk repo](https://github.com/dotnet/core-sdk).
 
 ### Analyzing your applications for .NET Core 3.0 readiness
 
-If you want to first understand your existing applications readiness for targeting .NET Core 3.0, you can run the .NET Portability Analyzer using the instructions [here](https://blogs.msdn.microsoft.com/dotnet/2018/08/08/are-your-windows-forms-and-wpf-applications-ready-for-net-core-3-0/). This will produce a report that will show you API compatibility for each assembly that your application depends on.
+If you want to first understand your existing applications readiness for targeting .NET Core 3.0, you can run the .NET Portability Analyzer using the instructions [here](https://devblogs.microsoft.com/dotnet/are-your-windows-forms-and-wpf-applications-ready-for-net-core-3-0/). This will produce a report that will show you API compatibility for each assembly that your application depends on.
 
 ### Creating new .NET Core 3.0 WPF applications
 
@@ -81,7 +81,7 @@ Most existing projects include an `AssemblyInfo.cs` file in the Properties folde
 
 **Include the Windows.Compatibility Pack**
 
-Not every framework assembly is available in the .NET Core base class library. Windows applications like WinForms and WPF could have dependencies that are not available in .NET Core or .NET Standard. Adding a reference to the [Windows Compatibility Pack](https://docs.microsoft.com/dotnet/core/porting/windows-compat-pack) will help reduce missing assembly dependencies as it includes several types that might be needed by your application.
+Not every framework assembly is available in the .NET Core base class library. Windows applications like Windows Forms and WPF could have dependencies that are not available in .NET Core or .NET Standard. Adding a reference to the [Windows Compatibility Pack](https://docs.microsoft.com/dotnet/core/porting/windows-compat-pack) will help reduce missing assembly dependencies as it includes several types that might be needed by your application.
 
 ```cmd
 dotnet add package Microsoft.Windows.Compatibility
@@ -95,13 +95,13 @@ Visual Studio does not yet support designers and custom tools for .NET desktop d
 
 .NET Core has its own implementation of `System.ServiceModel` with some differences:
 
-* It's available as NuGet packages (also included in the Windows Compatiblity Pack)
-* Review if your application uses some of the [unsupported features](https://github.com/dotnet/wcf/blob/master/release-notes/SupportedFeatures-v2.1.0.md).
+* It's available as NuGet packages (also included in the Windows Compatibility Pack).
+* Review if your application uses some of the [unsupported features](https://github.com/dotnet/wcf/blob/main/release-notes/SupportedFeatures-v2.1.0.md).
 * If you want to reuse the ServiceReference created by Visual Studio you might get the error `System.PlatformNotSupportedException: 'Configuration files are not supported.'`. This error requires a code change to specify the binding and endpoint address in the service client constructor.
 
 ## Filing Issues and Getting Help
 
-You can file WinForms and WPF related issues in the [dotnet/core repo](https://github.com/dotnet/core/issues). If you are trying out WPF or WinForms development on top of .NET Core 3.0 and get stuck or have questions, please reach out to netcore3modernize@microsoft.com.
+You can file Windows Forms and WPF related issues in the [dotnet/core repo](https://github.com/dotnet/core/issues). If you are trying out WPF or Windows Forms development on top of .NET Core 3.0 and get stuck or have questions, please reach out to <netcore3modernize@microsoft.com>.
 
 ### Known Issues
 

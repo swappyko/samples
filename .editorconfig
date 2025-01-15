@@ -10,7 +10,6 @@ root = true
 insert_final_newline = true
 indent_style = space
 indent_size = 4
-trim_trailing_whitespace = true
 
 [project.json]
 indent_size = 2
@@ -18,6 +17,12 @@ indent_size = 2
 # C# and Visual Basic files
 [*.{cs,vb}]
 charset = utf-8-bom
+
+# Code quality analyzers
+dotnet_analyzer_diagnostic.category-Security.severity = error
+dotnet_code_quality.ca1802.api_surface = private, internal
+
+# Miscellaneous style rules
 dotnet_sort_system_directives_first = true
 dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
 dotnet_style_predefined_type_for_member_access = true:suggestion
@@ -71,9 +76,6 @@ dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
 dotnet_style_prefer_auto_properties = true:suggestion
 dotnet_style_prefer_conditional_expression_over_assignment = true:refactoring
 dotnet_style_prefer_conditional_expression_over_return = true:refactoring
-
-# Analyzers
-dotnet_code_quality.ca1802.api_surface = private, internal
 
 # C# files
 [*.cs]

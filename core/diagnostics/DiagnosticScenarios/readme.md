@@ -2,7 +2,7 @@
 languages:
 - csharp
 products:
-- dotnet-core
+- dotnet
 page_type: sample
 name: "Diagnostic scenarios sample debug target"
 urlFragment: "diagnostic-scenarios"
@@ -11,6 +11,10 @@ description: "A .NET Core sample with methods that trigger undesirable behaviors
 # Diagnostic scenarios sample debug target
 
 The sample debug target is a simple `webapi` application. The sample triggers undesirable behaviors for the [.NET Core diagnostics tutorials](https://docs.microsoft.com/dotnet/core/diagnostics/index#net-core-diagnostics-tutorials) to diagnose.
+
+## Download the source
+
+To get the code locally on your machine, click on '<> Code' in the top left corner of this page. This will take you to the root of the repo. Once at the root, clone the samples repo onto your local machine and navigate to samples/core/diagnostics/DiagnosticScenarios/.
 
 ## Build and run the target
 

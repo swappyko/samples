@@ -34,7 +34,7 @@ namespace TaxiFarePrediction
             TestSinglePrediction(mlContext, model);
             // </Snippet20>
         }
-        
+
         public static ITransformer Train(MLContext mlContext, string dataPath)
         {
             // <Snippet6>
@@ -42,10 +42,10 @@ namespace TaxiFarePrediction
             // </Snippet6>
 
             // <Snippet7>
-            var pipeline = mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName:"FareAmount")
-            // </Snippet7>
+            var pipeline = mlContext.Transforms.CopyColumns(outputColumnName: "Label", inputColumnName: "FareAmount")
+                    // </Snippet7>
                     // <Snippet8>
-                    .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "VendorIdEncoded", inputColumnName:"VendorId"))
+                    .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "VendorIdEncoded", inputColumnName: "VendorId"))
                     .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "RateCodeEncoded", inputColumnName: "RateCode"))
                     .Append(mlContext.Transforms.Categorical.OneHotEncoding(outputColumnName: "PaymentTypeEncoded", inputColumnName: "PaymentType"))
                     // </Snippet8>
@@ -54,10 +54,10 @@ namespace TaxiFarePrediction
                     // </Snippet9>
                     // <Snippet10>
                     .Append(mlContext.Regression.Trainers.FastTree());
-                    // </Snippet10>
+            // </Snippet10>
 
             Console.WriteLine("=============== Create and Train the Model ===============");
-            
+
             // <Snippet11>
             var model = pipeline.Fit(dataView);
             // </Snippet11>
@@ -102,7 +102,7 @@ namespace TaxiFarePrediction
             // <Snippet22>
             var predictionFunction = mlContext.Model.CreatePredictionEngine<TaxiTrip, TaxiTripFarePrediction>(model);
             // </Snippet22>
-            //Sample: 
+            //Sample:
             //vendor_id,rate_code,passenger_count,trip_time_in_secs,trip_distance,payment_type,fare_amount
             //VTS,1,1,1140,3.75,CRD,15.5
             // <Snippet23>

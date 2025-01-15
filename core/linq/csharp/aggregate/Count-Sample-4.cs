@@ -7,7 +7,7 @@ namespace Aggregate
     public static class CountSample4
     {
         // This sample uses Count and query syntax to return a list of product counts per category.
-        // Output: 
+        // Output:
         // There are 12 products in the Beverages category.
         // There are 12 products in the Condiments category.
         // There are 5 products in the Produce category.
@@ -24,7 +24,7 @@ namespace Aggregate
                 from prod in products
                 group prod by prod.Category
                 into prodGroup
-                select new {CategoryName = prodGroup.Key, ProductCount = prodGroup.Count()};
+                select new { CategoryName = prodGroup.Key, ProductCount = prodGroup.Count() };
 
             foreach (var item in categoryCounts)
             {
@@ -33,7 +33,7 @@ namespace Aggregate
         }
 
         // This sample uses Count and method syntax to return a list of product counts per category.
-        // Output: 
+        // Output:
         // There are 12 products in the Beverages category.
         // There are 12 products in the Condiments category.
         // There are 5 products in the Produce category.
@@ -48,7 +48,7 @@ namespace Aggregate
 
             var categoryCounts =
                 products.GroupBy(prod => prod.Category)
-                    .Select(prodGroup => new {CategoryName = prodGroup.Key, ProductCount = prodGroup.Count()});
+                    .Select(prodGroup => new { CategoryName = prodGroup.Key, ProductCount = prodGroup.Count() });
 
             foreach (var item in categoryCounts)
             {

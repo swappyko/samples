@@ -7,7 +7,7 @@ namespace Aggregate
     public static class MinSample3
     {
         // This sample uses Min and query syntax to get the cheapest price among each category's products.
-        // Output: 
+        // Output:
         // The cheapest price for an item in the Beverages category is $4.50.
         // The cheapest price for an item in the Condiments category is $10.00.
         // The cheapest price for an item in the Produce category is $10.00.
@@ -24,7 +24,7 @@ namespace Aggregate
                 from p in products
                 group p by p.Category
                 into g
-                select new {CategoryName = g.Key, CheapestPrice = g.Min(p => p.UnitPrice)};
+                select new { CategoryName = g.Key, CheapestPrice = g.Min(p => p.UnitPrice) };
             foreach (var category in categories)
             {
                 Console.WriteLine(
@@ -48,7 +48,7 @@ namespace Aggregate
 
             var categories =
                 products.GroupBy(p => p.Category)
-                    .Select(g => new {CategoryName = g.Key, CheapestPrice = g.Min(p => p.UnitPrice)});
+                    .Select(g => new { CategoryName = g.Key, CheapestPrice = g.Min(p => p.UnitPrice) });
             foreach (var category in categories)
             {
                 Console.WriteLine(

@@ -2,7 +2,7 @@
 * Module Name:  DataGridViewPaging
 * Project:      CSWinFormDataGridView
 * Copyright (c) Microsoft Corporation.
-* 
+*
 * This sample demonstrates how to page data in the  DataGridView control;
 \**********************************************************************************/
 
@@ -49,7 +49,7 @@ namespace CSWinFormDataGridView.DataGridViewPaging
 
             // Get total count of the pages;
             this.GetTotalPageCount();
-            
+
             this.dataGridView1.ReadOnly = true;
 
             // Load the first page of data;
@@ -89,12 +89,12 @@ namespace CSWinFormDataGridView.DataGridViewPaging
             }
             else
             {
-                int lowerPageBoundary = ( page - 1) * PageSize;
+                int lowerPageBoundary = (page - 1) * PageSize;
 
                 command.CommandText = "Select Top " + PageSize +
                     " * From Orders " +
-                    " WHERE OrderID NOT IN "+
-                    " (SELECT TOP " + lowerPageBoundary + " OrderID From Orders Order By OrderID) "+
+                    " WHERE OrderID NOT IN " +
+                    " (SELECT TOP " + lowerPageBoundary + " OrderID From Orders Order By OrderID) " +
                     " Order By OrderID";
             }
             try

@@ -7,7 +7,7 @@ namespace Prime.UnitTests.Services
     public class PrimeService_IsPrimeShould
     {
         private readonly PrimeService _primeService;
-        
+
         public PrimeService_IsPrimeShould()
         {
             _primeService = new PrimeService();
@@ -22,7 +22,7 @@ namespace Prime.UnitTests.Services
         }
 
         #region Sample_TestCode
-        [DataTestMethod]
+        [TestMethod]
         [DataRow(-1)]
         [DataRow(0)]
         [DataRow(1)]

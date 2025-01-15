@@ -6,8 +6,8 @@ namespace Join
 {
     public static class GroupJoinExample1
     {
-        // Using a group join you can get all the products that match a given category bundled as a sequence. 
-        // Output: 
+        // Using a group join you can get all the products that match a given category bundled as a sequence.
+        // Output:
         // Beverages:
         //    Chai
         //    Chang
@@ -75,7 +75,7 @@ namespace Join
             var q =
                 from c in categories
                 join p in products on c equals p.Category into ps
-                select new {Category = c, Products = ps};
+                select new { Category = c, Products = ps };
 
             foreach (var v in q)
             {
@@ -87,7 +87,7 @@ namespace Join
             }
         }
 
-        // Using a group join you can get all the products that match a given category bundled as a sequence. 
+        // Using a group join you can get all the products that match a given category bundled as a sequence.
         // Output:
         // Beverages:
         //    Chai
@@ -153,7 +153,7 @@ namespace Join
 
             List<Product> products = Data.Products;
 
-            var q = categories.GroupJoin(products, c => c, p => p.Category, (c, ps) => new {Category = c, Products = ps});
+            var q = categories.GroupJoin(products, c => c, p => p.Category, (c, ps) => new { Category = c, Products = ps });
 
             foreach (var v in q)
             {

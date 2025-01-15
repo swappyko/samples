@@ -7,7 +7,7 @@ namespace customer_relationship
 {
     public class SampleCustomer : ICustomer
     {
-        public SampleCustomer(string name, DateTime dateJoined) => 
+        public SampleCustomer(string name, DateTime dateJoined) =>
             (Name, DateJoined) = (name, dateJoined);
 
         private List<IOrder> allOrders = new List<IOrder>();
@@ -33,7 +33,7 @@ namespace customer_relationship
         // <SnippetOverrideAndExtend>
         public decimal ComputeLoyaltyDiscount()
         {
-           if (PreviousOrders.Any() == false)
+            if (PreviousOrders.Any() == false)
                 return 0.50m;
             else
                 return ICustomer.DefaultLoyaltyDiscount(this);

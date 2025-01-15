@@ -1,10 +1,22 @@
+---
+languages:
+- csharp
+- cpp
+products:
+- dotnet
+page_type: sample
+name: "DllMap Demo"
+urlFragment: "dllmap-demo"
+description: "A sample that illustrates the use of NativeLibrary APIs to implement library name mappings"
+---
+
 # DllMap Demo
 
 This sample illustrates the use of NativeLibrary APIs to implement library name mappings similar to the [Mono](https://www.mono-project.com/) [Dllmap](https://www.mono-project.com/docs/advanced/pinvoke/dllmap/) feature.
 
 ## NativeLibrary APIs
 
-.NET Core 3.0 provides a rich set of APIs to manage native libraries:
+.NET Core 3.1 provides a rich set of APIs to manage native libraries:
 
 - [NativeLibrary APIs](https://docs.microsoft.com/dotnet/api/system.runtime.interopservices.nativelibrary): Perform operations on native libraries (such as `Load()`, `Free()`, get the address of an exported  symbol, etc.) in a platform-independent way from managed code.
 - [DllImport Resolver callback](https://docs.microsoft.com/dotnet/api/system.runtime.interopservices.nativelibrary.setdllimportresolver):  Gets a callback for first-chance native library resolution using custom logic.
@@ -20,7 +32,7 @@ These APIs can be used to implement custom native library resolution logic, incl
 
 ## Build and Run
 
-1. Install .NET Core 3.0 Preview 3 or newer.
+1. Install .NET Core 3.1 or newer.
 
 1. Use the .NET Core SDK to build the project via `dotnet build`.
 
