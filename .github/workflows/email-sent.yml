@@ -22,7 +22,7 @@ jobs:
         node-version: '14'
 
     - name: setup npm dependencies
-      run: npm init
+      run: npm init -y
       
     - name: Install npm
       run: npm install
