@@ -36,18 +36,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Send failure email notification
-      uses: mailersend/mailersend@v1
-      with:
-        api_key: ${{ secrets.MAILERSEND_API_KEY }}
-        to: 'swapnilko@gmail.com'
-        from: 'notifiation@mail.com'
-        subject: 'GitHub Actions Workflow Failed'
-        text: |
-          Hello,
+      run: |
+        sudo apt-get install -y msmtp
+        echo "defaults" > ~/.msmtprc
+        echo "account default" >> ~/.msmtprc
+        echo "host smtp.gmail.com" >> ~/.msmtprc
+        echo "port 587" >> ~/.msmtprc
+        echo "from swapnilko@gmail.com" >> ~/.msmtprc
+        echo "user kondechipranjal@gmail.com" >> ~/.msmtprc
+        echo "password ${{ secrets.SMTP_PASSWORD }}" >> ~/.msmtprc
+        echo "tls on" >> ~/.msmtprc
+        echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" >> ~/.msmtprc
+        echo "logfile ~/.msmtp.log" >> ~/.msmtprc
 
-          The GitHub Actions workflow for your repository has failed.
-
-          Please check the build logs for more details.
-
-          Regards,
-          GitHub Actions
+        echo -e "Subject: GitHub Actions Workflow Failed\n\nHello,\n\nThe GitHub Actions workflow has failed. Please check the build logs." | msmtp nanan@gmail.com
