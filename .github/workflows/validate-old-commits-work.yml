@@ -1,5 +1,6 @@
 name: Validate Commit Messages
 
+
 on:
   pull_request:
     branches:
