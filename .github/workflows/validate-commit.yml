@@ -1,7 +1,6 @@
 # .github/workflows/commit-check.yml
 name: Check Commit Message Format
 
-
 # Add permissions at workflow level
 permissions:
   contents: read
@@ -19,18 +18,6 @@ on:
   push:
     branches:
       - main
-
-jobs:
-  check-commit-message:
-    runs-on: ubuntu-latest
-    outputs:
-      invalid_messages: ${{ steps.check.outputs.invalid_messages }}
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
 jobs:
   validate-commit-message:
