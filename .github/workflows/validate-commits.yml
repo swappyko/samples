@@ -9,7 +9,7 @@ on:
       - main # Adjust as per your branch names
 
 jobs:
-  validate-commit-message:
+  validate-commit-message-all:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
