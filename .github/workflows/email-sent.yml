@@ -44,7 +44,7 @@ jobs:
         echo "host smtp.gmail.com" >> ~/.msmtprc
         echo "port 587" >> ~/.msmtprc
         echo "from swapnilko@gmail.com" >> ~/.msmtprc
-        echo "user kondechipranjal@gmail.com" >> ~/.msmtprc
+        echo "user swapnil_konde@hotmail.com" >> ~/.msmtprc
         echo "password ${{ secrets.SMTP_PASSWORD }}" >> ~/.msmtprc
         echo "tls on" >> ~/.msmtprc
         echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" >> ~/.msmtprc
