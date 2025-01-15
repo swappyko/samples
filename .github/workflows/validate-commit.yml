@@ -21,7 +21,7 @@ on:
       - main
 
 jobs:
-  validate-commit-message:
+  validate-commit-message12:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
