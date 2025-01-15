@@ -3,10 +3,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # Retrieve SMTP details from environment variables or GitHub secrets
-SMTP_SERVER = 'smtp-mail.outlook.com'
-SMTP_PORT = 587
-SMTP_USER = 'swapnil_konde@outlook.com'
-SMTP_PASSWORD = 'rrkgvuizfllveade'
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 465
+SMTP_USER = 'swapnilko@gmail.com'
+SMTP_PASSWORD = 'InfoSec)(*&2022'
 TO_EMAIL = 'swapnil_konde@hotmail.com'
 SUBJECT = 'Test Email'
 BODY = 'This is a test email sent from GitHub Actions pipeline.'
