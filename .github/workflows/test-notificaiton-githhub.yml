@@ -1,0 +1,23 @@
+# test1-repo/.github/workflows/main.yml
+name: Main Workflow
+
+on:
+  push:
+    branches: [ email-trigger-poc ]
+  pull_request:
+    branches: [ email-trigger-poc ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build step
+        run: |
+          echo "Running build..."
+          # Your build steps here
+
+      - name: Hello World
+        run: echo Hello, world! && exit 1
+        

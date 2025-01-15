@@ -1,0 +1,66 @@
+name: Notify on Failure
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'The reason for running the workflow'
+        required: true
+        default: 'Manual run'
+
+jobs:
+  failure-notification:
+    runs-on: ubuntu-latest
+    #if: failure()  # Only run if the previous job failed
+    if: always()  # This will run even if the job fails or not
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Determine the Path
+        id: determine_path
+        run: |
+          # Extract the path from the current repository context (for example, 'swappyko/samples')
+          CURRENT_PATH=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2-)
+          echo "The current path is: $CURRENT_PATH"
+          echo "::set-output name=path::$CURRENT_PATH"
+      
+      - name: Fetch Email Based on Path
+        id: fetch_email
+        run: |
+          # Retrieve the current path from the previous step
+          CURRENT_PATH="${{ steps.determine_path.outputs.path }}"
+          
+          # Search emails.txt for the matching path and extract the email
+          EMAIL=$(grep "$CURRENT_PATH" .github/workflows/emails.txt | sed 's/^[^|]*| *//')
+          
+          if [ -z "$EMAIL" ]; then
+            echo "No email found for the path: $CURRENT_PATH"
+            exit 1
+          else
+            echo "Email to notify: $EMAIL"
+            echo "::set-output name=email::$EMAIL"
+          fi
+
+      - name: Send Failure Email via SMTP
+        run: |
+          # Install msmtp to send emails via SMTP
+          sudo apt-get install -y msmtp
+
+          # Create the msmtp configuration file for KPMG's SMTP
+          echo "defaults" > ~/.msmtprc
+          echo "auth off" >> ~/.msmtprc  # No authentication if required by KPMG's SMTP
+          echo "tls on" >> ~/.msmtprc  # Enable TLS if needed
+          echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" >> ~/.msmtprc
+          echo "host smtp.kpmgus.com" >> ~/.msmtprc  # Replace with actual SMTP server
+          echo "port 587" >> ~/.msmtprc  # Adjust port if necessary
+          echo "from your-email@example.com" >> ~/.msmtprc  # Sender email
+
+          # Send the email via SMTP using msmtp
+          EMAIL="${{ steps.fetch_email.outputs.email }}"
+          echo -e "Subject: GitHub Action Workflow Failed\n\nThe GitHub Action workflow has failed. Please check the details." | msmtp "$EMAIL"

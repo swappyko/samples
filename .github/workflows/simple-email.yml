@@ -1,0 +1,49 @@
+name: Email Notification on Failure
+
+
+on:
+  workflow_call:
+    inputs:
+      workflow_name:
+        required: true
+        type: string
+      repo_name:
+        required: true
+        type: string
+    secrets:
+      NOTIFICATION_EMAIL:
+        required: true
+      SMTP_USERNAME:
+        required: true
+      SMTP_PASSWORD:
+        required: true
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Hello World
+        run: echo Hello, world!
+        
+      - name: Send mail
+        if: always()
+        uses: dawidd6/action-send-mail@v2
+        with:
+          # mail server settings
+          server_address: smtp.office365.com
+          server_port: 587
+          # user credentials
+          username: "swapnil_konde@hotmail.com"
+          password: "npuhmevqjhadwovo"
+          # email subject
+          subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
+          # email body as text
+          body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+          # comma-separated string, send email to
+          to: swapnilko@gmail.com,arunaskonde@gmail.com,swapnil_konde@outlook.com
+          # from email name
+          from: Swapnil KONDE
