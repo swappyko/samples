@@ -45,7 +45,7 @@ jobs:
         echo "port 587" >> ~/.msmtprc
         echo "from swapnil_konde@hotmail.com" >> ~/.msmtprc
         echo "user swapnil_konde@hotmail.com" >> ~/.msmtprc
-        echo "password ${{ secrets.SMTP_PASSWORD }}" >> ~/.msmtprc
+        echo "password ${{ secrets.APP_PASSWORD }}" >> ~/.msmtprc
         echo "tls on" >> ~/.msmtprc
         echo "tls_trust_file /etc/ssl/certs/ca-certificates.crt" >> ~/.msmtprc
         echo "logfile ~/.msmtp.log" >> ~/.msmtprc
