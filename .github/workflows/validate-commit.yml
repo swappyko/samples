@@ -32,73 +32,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Validate Commits
-        id: validate
+jobs:
+  validate-commit-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Commit Messages
         run: |
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            # For push events, check the latest commit
-            COMMIT_MSG=$(git log -1 --format=%s)
-            if ! echo "$COMMIT_MSG" | grep -qE '^ASSETMGMTA-[0-9]+ .+$'; then
-              echo "error_message=Latest commit message does not follow format: $COMMIT_MSG" >> $GITHUB_OUTPUT
+          git log --format=%s ${{ github.event.before }}..HEAD | while read -r message; do
+            if [[ ! "$message" =~ ^ASSETMGMTA-[0-9]+$ ]]; then
+              echo "Invalid commit message: $message"
               exit 1
             fi
-          else
-            # For PRs, check all commits
-            PR_COMMITS=$(git log --format=%H ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
-            INVALID_COMMITS=""
-            
-            for COMMIT in $PR_COMMITS; do
-              MSG=$(git log --format=%s -n 1 $COMMIT)
-              if ! echo "$MSG" | grep -qE '^ASSETMGMTA-[0-9]+ .+$'; then
-                INVALID_COMMITS="$INVALID_COMMITS\n- $MSG"
-              fi
-            done
-            
-            if [ ! -z "$INVALID_COMMITS" ]; then
-              echo "error_message=Found invalid commit messages:$INVALID_COMMITS" >> $GITHUB_OUTPUT
-              exit 1
-            fi
-          fi
-          
-          echo "✅ All commit messages follow the required format"
+          done
 
-      - name: Update PR Status
-        if: failure() && github.event_name == 'pull_request'
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ⚠️ **Invalid Commit Message Format Detected**
-            
-            ${{ steps.validate.outputs.error_message }}
-            
-            Please ensure all commit messages follow the format:
-            ```
-            ASSETMGMTA-<number> <description>
-            ```
-            
-            **Examples:**
-            - ASSETMGMTA-1234 Add new feature
-            - ASSETMGMTA-5678 Fix login bug
-            
-            **To fix this:**
-            1. Use interactive rebase to edit commit messages:
-               ```bash
-               git rebase -i origin/${{ github.base_ref }}
-               ```
-            2. Change 'pick' to 'reword' for commits you want to modify
-            3. Save and update the commit messages
-            4. Force push your changes:
-               ```bash
-               git push --force
-               ```
-
-      - name: Block Invalid Commits
-        if: failure()
-        run: |
-          echo "❌ Commit validation failed"
-          echo "${{ steps.validate.outputs.error_message }}"
-          exit 1
 # # .github/workflows/validate-commit.yml
 # name: Validate Commit Messages in PR
 
