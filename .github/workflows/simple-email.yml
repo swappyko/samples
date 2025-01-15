@@ -1,5 +1,6 @@
 name: Email Notification on Failure
 
+
 on:
   workflow_call:
     inputs:
