@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 # Retrieve SMTP details from environment variables or GitHub secrets
 SMTP_SERVER = 'smtp-mail.outlook.com'
 SMTP_PORT = 587
-SMTP_USER = 'swapnil_konde@hotmail.com'
+SMTP_USER = 'swapnil_konde@outlook.com'
 SMTP_PASSWORD = 'rrkgvuizfllveade'
 TO_EMAIL = 'swapnil_konde@hotmail.com'
 SUBJECT = 'Test Email'
