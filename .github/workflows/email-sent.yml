@@ -28,9 +28,6 @@ jobs:
     - name: Install npm
       run: npm install --save-dev jest
 
-    # - name: Run tests
-    #   run: npm test
-
     - name: Fail this job for testing
       run: exit 1  # This is a simulated failure step, remove this in a real scenario
 
