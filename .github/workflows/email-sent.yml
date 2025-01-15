@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
+
+    - name: Fail this job for testing
+      run: exit 1  # This is a simulated failure step, remove this in a real scenario
+
+  notify:
+    needs: build
+    if: failure()  # Only run this job if the build fails
+    runs-on: ubuntu-latest
+    steps:
+    - name: Send failure email notification
+      uses: mailersend/mailersend@v1
+      with:
+        api_key: ${{ secrets.MAILERSEND_API_KEY }}
+        to: 'swapnilko@gmail.com'
+        from: 'notifiation@mail.com'
+        subject: 'GitHub Actions Workflow Failed'
+        text: |
+          Hello,
+
+          The GitHub Actions workflow for your repository has failed.
+
+          Please check the build logs for more details.
+
+          Regards,
+          GitHub Actions
