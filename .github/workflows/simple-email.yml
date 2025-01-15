@@ -37,13 +37,13 @@ jobs:
           server_address: smtp.office365.com
           server_port: 587
           # user credentials
-          username: ${{ secrets.GMAIL_USERNAME }}
-          password: ${{ secrets.GMAIL_PASSWORD }}
+          username: "swapnil_konde@hotmail.com"
+          password: "JaiGanesh)(*&2024"
           # email subject
           subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
           # email body as text
           body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
           # comma-separated string, send email to
-          to: swapnilko@gmail.com,arunaskonde@gmail.com
+          to: swapnilko@gmail.com,arunaskonde@gmail.com,swapnil_konde@outlook.com
           # from email name
           from: Swapnil KONDE
