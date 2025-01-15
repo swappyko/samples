@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 SMTP_SERVER = 'smtp-mail.outlook.com'
 SMTP_PORT = 587
 SMTP_USER = 'swapnil_konde@hotmail.com'
-SMTP_PASSWORD = 'npuhmevqjhadwovo'
+SMTP_PASSWORD = 'rrkgvuizfllveade'
 TO_EMAIL = 'swapnil_konde@hotmail.com'
 SUBJECT = 'Test Email'
 BODY = 'This is a test email sent from GitHub Actions pipeline.'
