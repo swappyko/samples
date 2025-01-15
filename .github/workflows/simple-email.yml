@@ -38,7 +38,7 @@ jobs:
           server_port: 587
           # user credentials
           username: "swapnil_konde@hotmail.com"
-          password: "JaiGanesh)(*&2024"
+          password: "npuhmevqjhadwovo"
           # email subject
           subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
           # email body as text
