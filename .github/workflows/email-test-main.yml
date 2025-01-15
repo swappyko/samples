@@ -1,6 +1,7 @@
 # test1-repo/.github/workflows/main.yml
 name: Main Workflow
 
+
 on:
   push:
     branches: [ email-trigger-poc ]
@@ -34,8 +35,8 @@ jobs:
       repo_name: 'samples'
     secrets:
       NOTIFICATION_EMAIL: ${{ secrets.NOTIFICATION_EMAIL }}
-      SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
-      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      SMTP_USERNAME: ${{ secrets.GMAIL_USERNAME }}
+      SMTP_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
 
 
 
