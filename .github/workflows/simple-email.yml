@@ -1,13 +1,27 @@
-name: Build
+name: Email Notification on Failure
 
 on:
-  push:
-    branches: main
+  workflow_call:
+    inputs:
+      workflow_name:
+        required: true
+        type: string
+      repo_name:
+        required: true
+        type: string
+    secrets:
+      NOTIFICATION_EMAIL:
+        required: true
+      SMTP_USERNAME:
+        required: true
+      SMTP_PASSWORD:
+        required: true
 
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - uses: actions/checkout@v2
 
