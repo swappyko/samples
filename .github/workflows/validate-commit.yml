@@ -1,0 +1,73 @@
+# .github/workflows/commit-check.yml
+name: Check Commit Message Format
+
+# Add permissions at workflow level
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  
+on:
+  workflow_call:
+    inputs:
+      config:
+        required: true
+        type: string
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+jobs:
+  validate-commit-message12:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate Commit Messages
+        run: |
+          git log --format=%s ${{ github.event.before }}..HEAD | while read -r message; do
+            if [[ ! "$message" =~ ^ASSETMGMTA-[0-9]+$ ]]; then
+              echo "Invalid commit message: $message"
+              exit 1
+            fi
+          done
+
+# # .github/workflows/validate-commit.yml
+# name: Validate Commit Messages in PR
+
+# on:
+#   workflow_call:
+#     inputs:
+#       config:
+#         required: true
+#         type: string
+
+# jobs:
+#   validate-commits:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0 # Fetch full history for all branches
+
+#       - name: Fetch Base Branch
+#         run: |
+#           git fetch origin main # Ensure main branch is fetched
+
+#       - name: Validate most recent commit message
+#         run: |
+#           # Get the most recent non-merge commit
+#           COMMIT_MSG=$(git log --no-merges -1 --format=%s)
+          
+#           # Check if commit message matches required format
+#           if ! echo "$COMMIT_MSG" | grep -qE '^ASSETMGMTA-[0-9]+.*$'; then
+#             echo "Error: Most recent commit message does not follow the required format 'ASSETMGMTA-****'"
+#             echo "Found commit message: $COMMIT_MSG"
+#             echo "Please update your most recent commit to follow the format: ASSETMGMTA-1234"
+#             exit 1
+#           fi

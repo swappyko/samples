@@ -1,0 +1,13 @@
+# .github/workflows/workflow-call.yml
+name: Workflow Call Example
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  call-validate-commit:
+    uses: ./.github/workflows/validate-commit.yml
+    with:
+      config: "production"  # Example of passing the config input
+
