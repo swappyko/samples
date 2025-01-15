@@ -61,10 +61,10 @@ jobs:
         TO_EMAIL: ${{ secrets.TO_EMAIL }}
       run: |
         curl --url 'smtps://smtp.gmail.com:465' --ssl-reqd \
-          --mail-from "$SMTP_USERNAME" \
-          --mail-rcpt "$TO_EMAIL" \
+          --mail-from "$NOTIFICATION_EMAIL" \
+          --mail-rcpt "$SMTP_USERNAME" \
           --upload-file <(echo -e "From: $SMTP_USERNAME\nTo: $TO_EMAIL\nSubject: Email from GitHub Actions\n\nThis is a test email sent using curl.") \
-          --user "$SMTP_USERNAME:$SMTP_PASSWORD"
+          --user "$GMAIL_USERNAME:$GMAIL_PASSWORD"
 
 # # .github/workflows/email-notification.yml
 # name: Reusable Email Notification
