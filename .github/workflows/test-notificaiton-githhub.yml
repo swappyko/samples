@@ -1,7 +1,6 @@
 # test1-repo/.github/workflows/main.yml
 name: Main Workflow
 
-
 on:
   push:
     branches: [ email-trigger-poc ]
